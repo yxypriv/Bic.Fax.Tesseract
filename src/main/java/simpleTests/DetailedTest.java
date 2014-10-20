@@ -16,6 +16,7 @@ import net.sourceforge.vietocr.ImageHelper;
 import net.sourceforge.vietocr.ImageIOHelper;
 
 import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 
 public class DetailedTest {
 	public static void main(String[] args) throws IOException {
@@ -24,11 +25,11 @@ public class DetailedTest {
 		ImageHelper ih = new ImageHelper();
 		ImageIOHelper iio = new ImageIOHelper();
 		api.TessBaseAPIInit2(handle, "./", "eng", TessOcrEngineMode.OEM_TESSERACT_CUBE_COMBINED);
-//		api.TessBaseAPISetPageSegMode(handle, TessPageSegMode.PSM_AUTO);
+//		api.TessBaseAPISetPageSegMoTessBaseAPIAdaptToWordStrde(handle, TessPageSegMode.PSM_AUTO);
 		
 		URL resource = TestTesseract.class.getClassLoader()//
-				.getResource("images.jpg");
-//				.getResource("character/1.png");
+//				.getResource("images.jpg");
+				.getResource("character/1.png");
 //				.getResource("Test5.png");
 
 		File f = new File(resource.getFile());
@@ -52,6 +53,13 @@ public class DetailedTest {
 	 	
 	 	api.TessBaseAPISetImage(handle, bb2, width, height, bytespp, bytespl);
 	 	Pointer p = api.TessBaseAPIGetUTF8Text(handle);
+//	 	int confidence = api.TessBaseAPIAdaptToWordStr(handle, 0, p.getString(0));
+	 	IntByReference tesseractPoint = api.TessBaseAPIAllWordConfidences(handle);
+	 	Pointer pointer = tesseractPoint.getPointer();
+	 	
+	 	for(int i=0; i<pointer.SIZE; i++) {
+	 		System.out.println(pointer.getString(i));
+	 	}
 	 	
 	 	String str = p.getString(0);
 	 	System.out.println(str);
